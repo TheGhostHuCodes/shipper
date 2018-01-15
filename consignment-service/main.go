@@ -17,6 +17,7 @@ const (
 // IRepository is an interface that defines a repository to store consignments.
 type IRepository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
+	GetAll() []*pb.Consignment
 }
 
 // Repository - Dummy repository. This simulates the use of a data store of some
@@ -30,6 +31,10 @@ func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, er
 	updated := append(repo.consignments, consignment)
 	repo.consignments = updated
 	return consignment, nil
+}
+
+func (repo *Repository) GetAll() []*pb.Consignment {
+	return repo.consignments
 }
 
 type service struct {
@@ -49,6 +54,11 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment) (*
 	// Return matching the `Response` message we created in our protobuf
 	// definition.
 	return &pb.Response{Created: true, Consignment: consignment}, nil
+}
+
+func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest) (*pb.Response, error) {
+	consignments := s.repo.GetAll()
+	return &pb.Response{Consignments: consignments}, nil
 }
 
 func main() {
