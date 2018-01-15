@@ -1,5 +1,4 @@
 *.swp
 *.pb.go
 
-consignment-service/consignment-service
 consignment-cli/consignment-cli
